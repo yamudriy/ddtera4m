@@ -9,5 +9,5 @@
 debuglog.txt
 **/terraform_plugins/**
 **/.vscode/**
+**/.awless/**
 .idea
-.awless
