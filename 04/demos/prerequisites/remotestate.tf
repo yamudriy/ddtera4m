@@ -4,14 +4,16 @@
 
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
+variable "public_key_path" {}
+variable "key_name" {}
 variable "aws_networking_bucket" {
-    default = "ddt-networking"
+    default = "dddtt-networking"
 }
 variable "aws_application_bucket" {
-    default = "ddt-application"
+    default = "dddtt-application"
 }
 variable "aws_dynamodb_table" {
-    default = "ddt-tfstatelock"
+    default = "dddtt-tfstatelock"
 }
 variable "user_home_path" {}
 
@@ -22,7 +24,7 @@ variable "user_home_path" {}
 provider "aws" {
   access_key = "${var.aws_access_key}"
   secret_key = "${var.aws_secret_key}"
-  region     = "us-west-2"
+  region     = "eu-central-1"
 }
 
 data "aws_iam_group" "ec2admin" {
@@ -32,6 +34,13 @@ data "aws_iam_group" "ec2admin" {
 ##################################################################################
 # RESOURCES
 ##################################################################################
+
+# SSH Public Key to use with Amazon Instances #
+resource "aws_key_pair" "PluralsightOpenKey" {
+  key_name   = "${var.key_name}"
+  public_key = "${file(var.public_key_path)}"
+}
+
 resource "aws_dynamodb_table" "terraform_statelock" {
   name           = "${var.aws_dynamodb_table}"
   read_capacity  = 20
@@ -216,7 +225,7 @@ aws_access_key_id = ${aws_iam_access_key.marymoe.id}
 aws_secret_access_key = ${aws_iam_access_key.marymoe.secret}
 
 EOF
-    filename = "${var.user_home_path}/.aws/credentials"
+    filename = "${var.user_home_path}\\.aws\\credentials"
 
 }
 

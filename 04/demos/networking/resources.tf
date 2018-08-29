@@ -5,7 +5,7 @@
 provider "aws" {
   access_key = "${var.aws_access_key}"
   secret_key = "${var.aws_secret_key}"
-  region     = "us-west-2"
+  region     = "eu-central-1"
 }
 
 ##################################################################################
@@ -28,7 +28,7 @@ module "vpc" {
   private_subnets = ["10.0.1.0/24"]
   public_subnets = ["10.0.0.0/24"]
 
-  enable_nat_gateway = false
+  enable_nat_gateway = true
 
   create_database_subnet_group = false
 

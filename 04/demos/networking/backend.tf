@@ -4,6 +4,6 @@
 terraform {
   backend "s3" {
     key = "networking.state"
-    region = "us-west-2"
+    region = "eu-central-1"
   }
 }
