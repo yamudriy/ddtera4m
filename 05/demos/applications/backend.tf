@@ -4,8 +4,8 @@
 terraform {
   backend "s3" {
     key            = "application.state"
-    region         = "us-west-2"
+    region         = "eu-central-1"
     profile        = "sallysue"
-    dynamodb_table = "ddt-tfstatelock"
+    dynamodb_table = "dddtt-tfstatelock"
   }
 }

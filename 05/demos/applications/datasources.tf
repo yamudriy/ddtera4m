@@ -16,7 +16,7 @@ data "terraform_remote_state" "networking" {
   config {
     key     = "${terraform.workspace == "default" ? var.network_remote_state_key : local.workspace_key}"
     bucket  = "${var.network_remote_state_bucket}"
-    region  = "us-west-2"
+    region  = "eu-central-1"
     profile = "${var.aws_profile}"
   }
 }

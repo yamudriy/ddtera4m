@@ -6,19 +6,25 @@
 
 provider "aws" {
   profile = "${var.aws_profile}"
-  region  = "us-west-2"
+  region  = "eu-central-1"
 }
 
 ##################################################################################
 # RESOURCES
 ##################################################################################
 
+# SSH Public Key to use with Amazon Instances #
+resource "aws_key_pair" "PluralsightOpenKey" {
+  key_name   = "${var.key_name}"
+  public_key = "${file(var.public_key_path)}"
+}
+
 resource "aws_launch_configuration" "webapp_lc" {
   lifecycle {
     create_before_destroy = true
   }
 
-  name_prefix   = "${terraform.workspace}-ddt-lc-"
+  name_prefix   = "${terraform.workspace}-dddtr-lc-"
   image_id      = "${data.aws_ami.aws_linux.id}"
   instance_type = "${data.external.configuration.result.asg_instance_size}"
 
@@ -34,7 +40,7 @@ resource "aws_launch_configuration" "webapp_lc" {
 }
 
 resource "aws_elb" "webapp_elb" {
-  name    = "ddt-webapp-elb"
+  name    = "dddtt-webapp-elb"
   subnets = ["${data.terraform_remote_state.networking.public_subnets}"]
 
   listener {
@@ -63,7 +69,7 @@ resource "aws_autoscaling_group" "webapp_asg" {
   }
 
   vpc_zone_identifier   = ["${data.terraform_remote_state.networking.public_subnets}"]
-  name                  = "ddt_webapp_asg"
+  name                  = "dddtt_webapp_asg"
   max_size              = "${data.external.configuration.result.asg_max_size}"
   min_size              = "${data.external.configuration.result.asg_min_size}"
   wait_for_elb_capacity = false
@@ -87,7 +93,7 @@ resource "aws_autoscaling_group" "webapp_asg" {
 # Scale Up Policy and Alarm
 #
 resource "aws_autoscaling_policy" "scale_up" {
-  name                   = "ddt_asg_scale_up"
+  name                   = "dddtt_asg_scale_up"
   scaling_adjustment     = 2
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 300
@@ -95,7 +101,7 @@ resource "aws_autoscaling_policy" "scale_up" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "scale_up_alarm" {
-  alarm_name                = "ddt-high-asg-cpu"
+  alarm_name                = "dddtt-high-asg-cpu"
   comparison_operator       = "GreaterThanThreshold"
   evaluation_periods        = "2"
   metric_name               = "CPUUtilization"
@@ -117,7 +123,7 @@ resource "aws_cloudwatch_metric_alarm" "scale_up_alarm" {
 # Scale Down Policy and Alarm
 #
 resource "aws_autoscaling_policy" "scale_down" {
-  name                   = "ddt_asg_scale_down"
+  name                   = "dddtt_asg_scale_down"
   scaling_adjustment     = -1
   adjustment_type        = "ChangeInCapacity"
   cooldown               = 600
@@ -125,7 +131,7 @@ resource "aws_autoscaling_policy" "scale_down" {
 }
 
 resource "aws_cloudwatch_metric_alarm" "scale_down_alarm" {
-  alarm_name                = "ddt-low-asg-cpu"
+  alarm_name                = "dddtt-low-asg-cpu"
   comparison_operator       = "LessThanThreshold"
   evaluation_periods        = "5"
   metric_name               = "CPUUtilization"
@@ -154,7 +160,7 @@ resource "aws_instance" "bastion" {
   tags = "${merge(
     local.common_tags,
     map(
-      "Name", "ddt_bastion_host",
+      "Name", "dddtt_bastion_host",
     )
   )}"
 }
@@ -165,12 +171,12 @@ resource "aws_eip" "bastion" {
 }
 
 resource "aws_db_subnet_group" "db_subnet_group" {
-  name       = "${terraform.workspace}-ddt-rds-subnet-group"
+  name       = "${terraform.workspace}-dddtt-rds-subnet-group"
   subnet_ids = ["${data.terraform_remote_state.networking.private_subnets}"]
 }
 
 resource "aws_db_instance" "rds" {
-  identifier             = "${terraform.workspace}-ddt-rds"
+  identifier             = "${terraform.workspace}-dddtt-rds"
   allocated_storage      = "${data.external.configuration.result.rds_storage_size}"
   engine                 = "${data.external.configuration.result.rds_engine}"
   engine_version         = "${data.external.configuration.result.rds_version}"

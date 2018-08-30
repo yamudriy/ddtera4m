@@ -4,7 +4,7 @@
 
 provider "aws" {
   profile = "${var.aws_profile}"
-  region  = "us-west-2"
+  region  = "eu-central-1"
 }
 
 ##################################################################################
@@ -20,7 +20,7 @@ data "aws_availability_zones" "available" {}
 # NETWORKING #
 module "vpc" {
   source = "terraform-aws-modules/vpc/aws"
-  name   = "ddt-${terraform.workspace}"
+  name   = "dddtt-${terraform.workspace}"
 
   cidr            = "${data.external.configuration.result.vpc_cidr_range}"
   azs             = "${slice(data.aws_availability_zones.available.names,0,data.external.configuration.result.vpc_subnet_count)}"

@@ -4,7 +4,7 @@ variable "network_remote_state_key" {
 }
 
 variable "network_remote_state_bucket" {
-  default = "ddt-networking"
+  default = "dddtt-networking"
 }
 
 variable "aws_profile" {}
@@ -14,12 +14,16 @@ variable "key_name" {
   default = "PluralsightKeys"
 }
 
+variable "public_key_path" {
+  default = "..\\..\\..\\id_rsa.pub"
+}
+
 variable "ip_range" {
   default = "0.0.0.0/0"
 }
 
 variable "rds_username" {
-  default     = "ddtuser"
+  default     = "dddttuser"
   description = "User name"
 }
 

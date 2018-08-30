@@ -4,8 +4,8 @@
 terraform {
   backend "s3" {
     key            = "networking.state"
-    region         = "us-west-2"
+    region         = "eu-central-1"
     profile        = "marymoe"
-    dynamodb_table = "ddt-tfstatelock"
+    dynamodb_table = "dddtt-tfstatelock"
   }
 }
