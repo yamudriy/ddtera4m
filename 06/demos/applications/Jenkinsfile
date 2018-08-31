@@ -33,9 +33,9 @@ pipeline {
                 dir('06/demos/applications/'){
                     script {
                         try {
-                            sh "terraform workspace -no-color new ${params.WORKSPACE}"
+                            sh "terraform workspace new ${params.WORKSPACE}"
                         } catch (err) {
-                            sh "terraform workspace -no-color select ${params.WORKSPACE}"
+                            sh "terraform workspace select ${params.WORKSPACE}"
                         }
                         sh "terraform plan -var 'aws_access_key=$APPLICATION_ACCESS_KEY' -var 'aws_secret_key=$APPLICATION_SECRET_KEY' \
                         -var 'url=${params.LAMBDA_URL}' -out terraform-application.tfplan -no-color;echo \$? > status"
