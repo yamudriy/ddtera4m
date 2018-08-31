@@ -16,7 +16,7 @@ variable "key_name" {
 }
 
 variable "public_key_path" {
-  default = "..\\..\\id_rsa.pub"
+  default = "../../../id_rsa.pub"
 }
 
 variable "ip_range" {
