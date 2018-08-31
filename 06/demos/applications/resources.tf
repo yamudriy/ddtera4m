@@ -15,6 +15,12 @@ provider "aws" {
 # RESOURCES
 ##################################################################################
 
+# SSH Public Key to use with Amazon Instances #
+resource "aws_key_pair" "PluralsightOpenKey" {
+  key_name   = "${var.key_name}"
+  public_key = "${file(var.public_key_path)}"
+}
+
 resource "aws_launch_configuration" "webapp_lc" {
   lifecycle {
     create_before_destroy = true

@@ -15,6 +15,10 @@ variable "key_name" {
   default = "PluralsightKeys"
 }
 
+variable "public_key_path" {
+  default = "..\\..\\..\\id_rsa.pub"
+}
+
 variable "ip_range" {
   default = "0.0.0.0/0"
 }

@@ -34,9 +34,9 @@ pipeline {
                 dir('06/demos/networking/'){
                     script {
                         try {
-                           sh "terraform workspace new ${params.WORKSPACE}"
+                           sh "terraform workspace -no-color new ${params.WORKSPACE}"
                         } catch (err) {
-                            sh "terraform workspace select ${params.WORKSPACE}"
+                            sh "terraform workspace -no-color select ${params.WORKSPACE}"
                         }
                         sh "terraform plan -var 'aws_access_key=$NETWORKING_ACCESS_KEY' -var 'aws_secret_key=$NETWORKING_SECRET_KEY' \
                         -var 'url=${params.LAMBDA_URL}' -out terraform-networking.tfplan -no-color;echo \$? > status"
