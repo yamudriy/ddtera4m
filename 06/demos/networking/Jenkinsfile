@@ -54,14 +54,14 @@ pipeline {
                         apply = true
                     } catch (err) {
                         apply = false
-                        dir('module5/networking'){
+                        dir('06/demos/networking'){
                             sh "terraform destroy -var 'aws_access_key=$NETWORKING_ACCESS_KEY' \
                              -var 'aws_secret_key=$NETWORKING_SECRET_KEY' -var 'url=${params.LAMBDA_URL}' -force -no-color"
                         }
                         currentBuild.result = 'UNSTABLE'
                     }
                     if(apply){
-                        dir('module5/networking'){
+                        dir('06/demos/networking'){
                             unstash "terraform-networking-plan"
                             sh 'terraform apply -no-color terraform-networking.tfplan'
                         }

@@ -8,18 +8,18 @@ pipeline {
         string(name: 'WORKSPACE', defaultValue: 'development', description:'worspace to use in Terraform')
     }
     environment {
-        TF_HOME = tool('terraform-0.11.1')
+        TF_HOME = tool('terraform-0.11.8')
         TF_IN_AUTOMATION = "true"
         PATH = "$TF_HOME:$PATH"
-        DYNAMODB_STATELOCK = "ddt-tfstatelock"
-        APPLICATION_BUCKET = "ddt-application"
+        DYNAMODB_STATELOCK = "dddtt-tfstatelock"
+        APPLICATION_BUCKET = "dddtt-application"
         APPLICATION_ACCESS_KEY = credentials('application_access_key')
         APPLICATION_SECRET_KEY = credentials('application_secret_key')
     }
     stages {
         stage('ApplicationInit'){
             steps {
-                dir('module5/applications/'){
+                dir('06/demos/applications/'){
                     sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins -no-color\
                      --backend-config='dynamodb_table=$DYNAMODB_STATELOCK' --backend-config='bucket=$APPLICATION_BUCKET' \
                      --backend-config='access_key=$APPLICATION_ACCESS_KEY' --backend-config='secret_key=$APPLICATION_SECRET_KEY'"
@@ -30,7 +30,7 @@ pipeline {
         }
         stage('ApplicationPlan'){
             steps {
-                dir('module5/applications/'){
+                dir('06/demos/applications/'){
                     script {
                         try {
                             sh "terraform workspace new ${params.WORKSPACE}"
@@ -53,14 +53,14 @@ pipeline {
                         apply = true
                     } catch (err) {
                         apply = false
-                        dir('module5/applications'){
+                        dir('06/demos/applications'){
                             sh "terraform destroy -var 'aws_access_key=$APPLICATION_ACCESS_KEY' \
                              -var 'aws_secret_key=$APPLICATION_SECRET_KEY' -var 'url=${params.LAMBDA_URL}' -force -no-color"
                         }
                          currentBuild.result = 'UNSTABLE'
                     }
                     if(apply){
-                        dir('module5/applications'){
+                        dir('06/demos/applications'){
                             unstash "terraform-application-plan"
                             sh 'terraform apply -no-color terraform-application.tfplan'
                         }
