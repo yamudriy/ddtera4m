@@ -20,7 +20,7 @@ pipeline {
         stage('ApplicationInit'){
             steps {
                 dir('module5/applications/'){
-                    sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins \
+                    sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins -no-color\
                      --backend-config='dynamodb_table=$DYNAMODB_STATELOCK' --backend-config='bucket=$APPLICATION_BUCKET' \
                      --backend-config='access_key=$APPLICATION_ACCESS_KEY' --backend-config='secret_key=$APPLICATION_SECRET_KEY'"
                     sh "echo \$PWD"
@@ -38,7 +38,7 @@ pipeline {
                             sh "terraform workspace select ${params.WORKSPACE}"
                         }
                         sh "terraform plan -var 'aws_access_key=$APPLICATION_ACCESS_KEY' -var 'aws_secret_key=$APPLICATION_SECRET_KEY' \
-                        -var 'url=${params.LAMBDA_URL}' -out terraform-application.tfplan;echo \$? > status"
+                        -var 'url=${params.LAMBDA_URL}' -out terraform-application.tfplan -no-color;echo \$? > status"
                         stash name: "terraform-application-plan", includes: "terraform-application.tfplan"
                     }
                 }
@@ -55,14 +55,14 @@ pipeline {
                         apply = false
                         dir('module5/applications'){
                             sh "terraform destroy -var 'aws_access_key=$APPLICATION_ACCESS_KEY' \
-                             -var 'aws_secret_key=$APPLICATION_SECRET_KEY' -var 'url=${params.LAMBDA_URL}' -force"
+                             -var 'aws_secret_key=$APPLICATION_SECRET_KEY' -var 'url=${params.LAMBDA_URL}' -force -no-color"
                         }
                          currentBuild.result = 'UNSTABLE'
                     }
                     if(apply){
                         dir('module5/applications'){
                             unstash "terraform-application-plan"
-                            sh 'terraform apply terraform-application.tfplan'
+                            sh 'terraform apply -no-color terraform-application.tfplan'
                         }
                     }
                 }

@@ -21,7 +21,7 @@ pipeline {
             steps {
                 dir('06/demos/networking/'){
                     sh 'terraform --version'
-                    sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins \
+                    sh "terraform init -input=false -plugin-dir=/var/jenkins_home/terraform_plugins -no-color\
                      --backend-config='dynamodb_table=$DYNAMODB_STATELOCK' --backend-config='bucket=$NETWORKING_BUCKET' \
                      --backend-config='access_key=$NETWORKING_ACCESS_KEY' --backend-config='secret_key=$NETWORKING_SECRET_KEY'"
                     sh "echo \$PWD"
@@ -39,7 +39,7 @@ pipeline {
                             sh "terraform workspace select ${params.WORKSPACE}"
                         }
                         sh "terraform plan -var 'aws_access_key=$NETWORKING_ACCESS_KEY' -var 'aws_secret_key=$NETWORKING_SECRET_KEY' \
-                        -var 'url=${params.LAMBDA_URL}' -out terraform-networking.tfplan;echo \$? > status"
+                        -var 'url=${params.LAMBDA_URL}' -out terraform-networking.tfplan -no-color;echo \$? > status"
                         stash name: "terraform-networking-plan", includes: "terraform-networking.tfplan"
                     }
                 }
@@ -56,14 +56,14 @@ pipeline {
                         apply = false
                         dir('module5/networking'){
                             sh "terraform destroy -var 'aws_access_key=$NETWORKING_ACCESS_KEY' \
-                             -var 'aws_secret_key=$NETWORKING_SECRET_KEY' -var 'url=${params.LAMBDA_URL}' -force"
+                             -var 'aws_secret_key=$NETWORKING_SECRET_KEY' -var 'url=${params.LAMBDA_URL}' -force -no-color"
                         }
                         currentBuild.result = 'UNSTABLE'
                     }
                     if(apply){
                         dir('module5/networking'){
                             unstash "terraform-networking-plan"
-                            sh 'terraform apply terraform-networking.tfplan'
+                            sh 'terraform apply -no-color terraform-networking.tfplan'
                         }
                     }
                 }
