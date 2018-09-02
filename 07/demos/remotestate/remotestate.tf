@@ -5,16 +5,19 @@
 variable "aws_access_key" {}
 variable "aws_secret_key" {}
 
+variable "public_key_path" {}
+variable "key_name" {}
+
 variable "aws_networking_bucket" {
-  default = "ddt-networking"
+  default = "dddtt-networking"
 }
 
 variable "aws_application_bucket" {
-  default = "ddt-application"
+  default = "dddtt-application"
 }
 
 variable "aws_dynamodb_table" {
-  default = "ddt-tfstatelock"
+  default = "dddtt-tfstatelock"
 }
 
 variable "user_home_path" {}
@@ -26,12 +29,19 @@ variable "user_home_path" {}
 provider "aws" {
   access_key = "${var.aws_access_key}"
   secret_key = "${var.aws_secret_key}"
-  region     = "us-west-2"
+  region     = "eu-central-1"
 }
 
 ##################################################################################
 # RESOURCES
 ##################################################################################
+
+# SSH Public Key to use with Amazon Instances #
+resource "aws_key_pair" "PluralsightOpenKey" {
+  key_name   = "${var.key_name}"
+  public_key = "${file(var.public_key_path)}"
+}
+
 data "template_file" "application_bucket_policy" {
   template = "${file("templates/bucket_policy.tpl")}"
 

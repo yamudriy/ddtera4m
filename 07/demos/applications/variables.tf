@@ -4,14 +4,14 @@ variable "network_remote_state_key" {
 }
 
 variable "network_remote_state_bucket" {
-  default = "ddt-networking"
+  default = "dddtt-networking"
 }
 
 variable "aws_profile" {}
 
 #Web front end variables
 variable "key_name" {
-  default = "PluralsightKeys"
+  default = "PluralsightOpenKey"
 }
 
 variable "ip_range" {

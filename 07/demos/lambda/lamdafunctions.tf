@@ -6,7 +6,7 @@ variable "aws_access_key" {}
 variable "aws_secret_key" {}
 
 variable "aws_dynamodb_table" {
-  default = "ddt-datasource"
+  default = "dddtt-datasource"
 }
 
 variable "accountId" {}
@@ -18,16 +18,14 @@ variable "accountId" {}
 provider "aws" {
   access_key = "${var.aws_access_key}"
   secret_key = "${var.aws_secret_key}"
-  region     = "us-west-2"
+  region     = "eu-central-1"
 }
 
 data "aws_iam_group" "ec2admin" {
   group_name = "EC2Admin"
 }
 
-data "aws_region" "current" {
-  current = true
-}
+data "aws_region" "current" {}
 
 ##################################################################################
 # RESOURCES
